@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import Logo from '../../assets/whiteLogo.png';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import DonJuanLogo from '../../assets/DonJuanLogo.png';
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -12,59 +12,14 @@ const HeaderContainer = styled.header`
   color: white;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
   padding: 5px 50px;
-`;
-
-const Column = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-`;
-
-const MyLogo = styled.img`
-  height: 100%;
-  width: auto;
-`;
-
-const SearchInput = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  background-color: white;
-  padding: 5px 15px 5px 15px;
-  border-radius: 30px;
-  width: 80%;
-`;
-
-const SuggestionsList = styled.ul`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background-color: white;
-  border-radius: 10px 10px 10px 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  list-style: none;
-  padding: 0;
-  margin: 0;
   z-index: 1000;
 `;
 
-const SuggestionItem = styled.li`
-  padding: 10px;
-  cursor: pointer;
-  color: black;
-  &:hover {
-    background-color: #f0f0f0;
-  }
-`;
-
-const SearchIcon = styled.i`
-  margin-left: 15px;
-  font-size: 150%;
-  cursor: pointer;
+const Logo = styled.img`
+  height: 80px;
+  cursor: pointer; /* Cambia el cursor a pointer para indicar que es clicable */
 `;
 
 const IconColumn = styled.div`
@@ -75,91 +30,63 @@ const IconColumn = styled.div`
   gap: 15px;
 `;
 
-const Icon = styled.div`
+const Icon = styled.i`
   font-size: 180%;
   cursor: pointer;
+  color: white;
   &:hover {
-    color: var(--secundaryColor);
+    color: #ccc;
   }
 `;
 
-function Header() {
-  const navigate = useNavigate();
-  const [search, setSearch] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
-  const [debounceTimeout, setDebounceTimeout] = useState(null);
+const AdminButton = styled.button`
+  color: white;
+  background: none;
+  border: none;
+  cursor: pointer;
+`;
 
-  const theProducts = ['jeans', 'nike', 't-shirt', 'skirt', 'cap','shirt', 'bershka', 'mustang'];
+const Header = () => {
+  const navigate = useNavigate();
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
-    if (debounceTimeout) {
-      clearTimeout(debounceTimeout);
+    const role = localStorage.getItem('role');
+    console.log('Rol del usuario:', role);
+    if (role) {
+      setUserRole(role);
     }
 
-    setDebounceTimeout(
-      setTimeout(() => {
-        if (search) {
-          const filteredSuggestions = theProducts.filter(product =>
-            product.toLowerCase().startsWith(search.toLowerCase())
-          );
-          setSuggestions(filteredSuggestions);
-        } else {
-          setSuggestions([]);
-        }
-      }, 1000)
-    );
-  }, [search]);
+    // Escuchar cambios en localStorage
+    const handleStorageChange = () => {
+      const updatedRole = localStorage.getItem('role');
+      setUserRole(updatedRole);
+    };
 
-  const handleSuggestionClick = (suggestion) => {
-    setSearch(suggestion);
-    setSuggestions([]);
-    navigate(`/filter/${suggestion}`);
-  };
+    window.addEventListener('storage', handleStorageChange);
+
+    // Limpieza del efecto
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   return (
     <HeaderContainer>
-      <Column className="col-md-3 col-sm-5">
-        <MyLogo onClick={() => navigate('/')} src={Logo} alt="Logo" />
-      </Column>
+      {/* Logo clicable para redirigir a la página de inicio */}
+      <Logo src={DonJuanLogo} alt="Don Juan Logo" onClick={() => navigate('/')} />
 
-      <Column className="col-md-6 d-none d-md-flex">
-        <SearchInput>
-          <input
-            type="text"
-            placeholder="What do you want"
-            className="form-control"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
-          <SearchIcon
-            className="bi bi-search"
-            style={{ color: "black" }}
-            onClick={() => navigate(`/filter/${search}`)}
-          />
-          {suggestions.length > 0 && (
-            <SuggestionsList>
-              {suggestions.map((suggestion, index) => (
-                <SuggestionItem key={index} onClick={() => handleSuggestionClick(suggestion)}>
-                  {suggestion}
-                </SuggestionItem>
-              ))}
-            </SuggestionsList>
-          )}
-        </SearchInput>
-      </Column>
+      {/* Botón visible solo si el rol es 'admin' */}
+      {userRole === 'admin' && (
+        <AdminButton onClick={() => navigate('/upload')}>Subir Producto</AdminButton>
+      )}
 
-      <Column className="d-md-none col-sm-2">
-        <SearchIcon className="bi bi-search" style={{ color: "white" }} />
-      </Column>
-
-      <Column className="col-md-3 col-sm-5">
-        <IconColumn>
-          <Icon className="bi bi-person" onClick={() => navigate('/login')} />
-          <Icon className="bi bi-cart" onClick={() => navigate('/cart')} />
-        </IconColumn>
-      </Column>
+      {/* Ícono de usuario para login */}
+      <IconColumn>
+        <Icon className="bi bi-person" onClick={() => navigate('/login')} />
+      </IconColumn>
     </HeaderContainer>
   );
-}
+};
 
 export default Header;

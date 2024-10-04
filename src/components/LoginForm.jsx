@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { jwtDecode } from 'jwt-decode';
 import useApi from '../hooks/useApi';
 
-// Styled components
 const Container = styled.div`
   max-width: 400px;
-  width: 400px; /* Fixed width for the square */
-  height: 400px; /* Fixed height for the square */
-  margin: 0 auto;
+  width: 100%;
   padding: 2rem;
   border: 1px solid #0A3E27;
   border-radius: 8px;
@@ -16,18 +14,18 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+const CenteredWrapper = styled.div`
+  display: flex;
+  align-items: center;
   justify-content: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 50vh;
+  height: 100vh;
 `;
 
 const Title = styled.h2`
-  text-align: center;
-  margin-bottom: 1.5rem;
   color: #0A3E27;
+  margin-bottom: 1.5rem;
 `;
 
 const Form = styled.form`
@@ -36,34 +34,18 @@ const Form = styled.form`
   width: 100%;
 `;
 
-const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-`;
-
-const Label = styled.label`
-  margin-bottom: 0.5rem;
-  color: #0A3E27;
-`;
-
 const Input = styled.input`
   padding: 0.5rem;
+  margin-bottom: 1rem;
   border: 1px solid #0A3E27;
   border-radius: 4px;
 `;
 
-const ErrorMessage = styled.p`
-  color: red;
-  margin-bottom: 1rem;
-`;
-
 const Button = styled.button`
   padding: 0.75rem;
-  border: none;
-  border-radius: 4px;
   background-color: #CC88FF;
   color: white;
+  border: none;
   cursor: pointer;
 
   &:hover {
@@ -71,74 +53,84 @@ const Button = styled.button`
   }
 `;
 
+const RegisterLink = styled.p`
+  margin-top: 1rem;
+  text-align: center;
+
+  a {
+    color: #007BFF;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { getData, error: apiError, isLoading, data } = useApi();
+  const { getData, error, isLoading, data } = useApi(); // Usar 'data' para obtener respuesta
 
-  useEffect(()=>{
-    if(data?.token){
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Realizar la llamada a la API con email y password
+    getData({
+      route: 'api/auth/login', // Asegúrate de que esta sea la ruta correcta en tu backend
+      method: 'POST',
+      body: { email, password },
+    });
+  };
+
+  useEffect(() => {
+    if (data?.token) {
+      // Decodificar el token para extraer el rol
+      const decodedToken = jwtDecode(data.token); // Usa jwt_decode para decodificar el JWT
+      const userRole = decodedToken.role; // Extraer el rol del token decodificado
+
+      // Guardar el token y el rol en localStorage
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('role', userRole); // Guardar el rol en localStorage
+
+      console.log('Rol extraído:', userRole); // Verificar si el rol está siendo extraído correctamente
+
+      // Redirigir a la página principal
       navigate('/');
     }
-  }, [data])
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-
-    if (!validateEmail(email)) {
-      setError('Please enter a valid email address.');
-      return;
-    }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long.');
-      return;
-    }
-
-    try {
-      getData({ route: 'auth/login',method: 'POST', body: { email, password } });
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const validateEmail = (email) => {
-    const re = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-    return re.test(email);
-  };
+  }, [data, navigate]);
 
   return (
-    <Container>
-      <Title>Login</Title>
-      <Form onSubmit={handleSubmit}>
-        <FormGroup>
-          <Label htmlFor="email">Email Address:</Label>
+    <CenteredWrapper>
+      <Container>
+        <Title>Login</Title>
+        <Form onSubmit={handleSubmit}>
           <Input
             type="email"
-            id="email"
+            placeholder="Correo electrónico"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="password">Password:</Label>
           <Input
             type="password"
-            id="password"
+            placeholder="Contraseña"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </FormGroup>
-        {(error || apiError) && <ErrorMessage>{error || apiError}</ErrorMessage>}
-        <Button type="submit" disabled={isLoading}>
-          {isLoading ? 'Loading...' : 'Login'}
-        </Button>
-      </Form>
-    </Container>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? 'Cargando...' : 'Iniciar sesión'}
+          </Button>
+        </Form>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <RegisterLink>
+          ¿No tienes cuenta? <a onClick={() => navigate('/register')}>Regístrate</a>
+        </RegisterLink>
+      </Container>
+    </CenteredWrapper>
   );
 };
 

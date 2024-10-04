@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useApi from '../hooks/useApi';
@@ -9,8 +9,6 @@ import { evaluatePasswordStrength } from '../utils/passwordStrength';
 const Container = styled.div`
   max-width: 400px;
   width: 100%;
-  height: 400px; /* Adjusted for square */
-  margin: 0 auto;
   padding: 2rem;
   border: 1px solid #0A3E27;
   border-radius: 8px;
@@ -18,11 +16,13 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+const CenteredWrapper = styled.div`
+  display: flex;
+  align-items: center;
   justify-content: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  height: 100vh; /* This ensures the content is vertically centered */
 `;
 
 const Title = styled.h2`
@@ -59,6 +59,11 @@ const ErrorMessage = styled.p`
   margin-bottom: 1rem;
 `;
 
+const SuccessMessage = styled.p`
+  color: green;
+  margin-bottom: 1rem;
+`;
+
 const Button = styled.button`
   padding: 0.75rem;
   border: none;
@@ -73,39 +78,36 @@ const Button = styled.button`
 `;
 
 const RegisterForm = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [cash, setCash] = useState('');
-  const [error, setError] = useState('');
-  const [passwordStrength, setPasswordStrength] = useState(''); // Initially empty
+  const [name, setName] = useState(''); // State for name
+  const [email, setEmail] = useState(''); // State for email
+  const [password, setPassword] = useState(''); // State for password
+  const [cash, setCash] = useState(''); // State for cash
+  const [error, setError] = useState(''); // State for error message
+  const [success, setSuccess] = useState(''); // State for success message
+  const [passwordStrength, setPasswordStrength] = useState(''); // State for password strength
   const { getData, isLoading, data } = useApi();
   const navigate = useNavigate();
-
-  useEffect(()=>{
-    if(data?.token){
-      navigate('/');
-    }
-  }, [data])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (passwordStrength === 'weak') {
-      setError('The password is too weak.');
+      setError('La contraseña es demasiado débil.');
       return;
     }
 
     try {
       getData({
-        route: 'auth/register',
+        route: 'api/auth/register',
         method: 'POST',
         body: { name, email, password, role: 'client', cash },
       });
 
+      // Show success message after registration
+      setSuccess('Registro exitoso. Se ha enviado una confirmación a tu correo.');
     } catch (err) {
       console.error('Error during registration:', err);
-      setError('Error during registration.');
+      setError('Error al registrar el usuario.');
     }
   };
 
@@ -116,56 +118,54 @@ const RegisterForm = () => {
   };
 
   return (
-    <Container>
-      <Title>Register</Title>
-      <Form onSubmit={handleSubmit}>
-        <FormGroup>
-          <Label htmlFor="name">Name:</Label>
-          <Input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="email">Email Address:</Label>
-          <Input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="password">Password:</Label>
-          <Input
-            type="password"
-            id="password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-          <PasswordStrengthBar strength={passwordStrength} />
-        </FormGroup>
-        <FormGroup>
-          <Label htmlFor="cash">Initial Cash:</Label>
-          <Input
-            type="number"
-            id="cash"
-            value={cash}
-            onChange={(e) => setCash(e.target.value)}
-            required
-          />
-        </FormGroup>
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        <Button type="submit" disabled={isLoading}>
-          {isLoading ? 'Loading...' : 'Register'}
-        </Button>
-      </Form>
-    </Container>
+    <CenteredWrapper>
+      <Container>
+        <Title>Registrate</Title>
+        <Form onSubmit={handleSubmit}>
+          <FormGroup>
+            <Label htmlFor="name">Nombre:</Label>
+            <Input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="email">Correo electrónico:</Label>
+            <Input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="password">Contraseña:</Label>
+            <Input
+              type="password"
+              id="password"
+              value={password}
+              onChange={handlePasswordChange}
+              required
+            />
+            <PasswordStrengthBar strength={passwordStrength} />
+          </FormGroup>
+
+          {/* Show error message */}
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          
+          {/* Show success message */}
+          {success && <SuccessMessage>{success}</SuccessMessage>}
+
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? 'Cargando...' : 'Registrarse'}
+          </Button>
+        </Form>
+      </Container>
+    </CenteredWrapper>
   );
 };
 

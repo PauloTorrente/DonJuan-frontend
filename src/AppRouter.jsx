@@ -7,6 +7,7 @@ import LoginPage from './pages/Home/LoginPage.jsx';
 import RegisterPage from './pages/Home/RegisterPage.jsx';
 import Success from './pages/Cart/Success.jsx';
 import ProductsPage from './pages/Products/ProductsPage';
+import UploadProductPage from './pages/UploadProductPage';
 
 function AppRouter() {
   return useRoutes(
@@ -34,6 +35,7 @@ function AppRouter() {
         path: '/success',
       },
       { element: <ProductsPage />, path: '/products' },
+      { element: <UploadProductPage />, path: '/upload' },
     ],
   )
 }
