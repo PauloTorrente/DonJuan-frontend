@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom'; 
 import usePostApi from '../hooks/usePostApi';
 import ImageUploader from './ImageUploader';
 
@@ -58,6 +59,15 @@ const UploadProductForm = () => {
   const [sizes, setSizes] = useState('');
   const [imageUrl, setImageUrl] = useState(null);
   const { postData, isLoading, error } = usePostApi();
+  const navigate = useNavigate(); 
+
+  // Check if user is admin
+  const userRole = localStorage.getItem('role');
+  useEffect(() => {
+    if (userRole !== 'admin') {
+      navigate('/'); // Redirect if not admin
+    }
+  }, [userRole, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,7 +80,7 @@ const UploadProductForm = () => {
       piece,
       brand,
       sizes: sizes.split(',').map(size => size.trim()),
-      imageUrl, // URL from ImageUploader
+      imageUrl, 
     };
 
     try {
@@ -82,6 +92,11 @@ const UploadProductForm = () => {
     } catch (err) {
       console.error('Error adding product:', err);
     }
+  };
+
+  const handleEditRedirect = () => {
+    const defaultProductId = 'some-default-id'; // Replace with actual product ID logic
+    navigate(`/edit-products/${defaultProductId}`); 
   };
 
   return (
@@ -102,7 +117,6 @@ const UploadProductForm = () => {
         <Input type="text" placeholder="Brand" onChange={(e) => setBrand(e.target.value)} required />
         <Input type="text" placeholder="Sizes (comma-separated)" onChange={(e) => setSizes(e.target.value)} required />
         
-        {/* Use the ImageUploader component for the image URL input */}
         <ImageUploader onImageUrlChange={setImageUrl} />
         
         <Button type="submit" disabled={isLoading}>
@@ -110,6 +124,10 @@ const UploadProductForm = () => {
         </Button>
       </Form>
       {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <Button type="button" onClick={handleEditRedirect} style={{ marginTop: '1rem' }}>
+        Edit Products
+      </Button>
     </Container>
   );
 };

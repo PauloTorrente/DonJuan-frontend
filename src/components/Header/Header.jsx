@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import DonJuanLogo from '../../assets/DonJuanLogo.png';
+import { useUser } from '../../contexts/UserContext';
 
 const HeaderContainer = styled.header`
   position: fixed;
@@ -19,7 +19,7 @@ const HeaderContainer = styled.header`
 
 const Logo = styled.img`
   height: 80px;
-  cursor: pointer; /* Cambia el cursor a pointer para indicar que es clicable */
+  cursor: pointer;
 `;
 
 const IconColumn = styled.div`
@@ -48,42 +48,33 @@ const AdminButton = styled.button`
 
 const Header = () => {
   const navigate = useNavigate();
-  const [userRole, setUserRole] = useState(null);
+  const { user, logout } = useUser();
 
-  useEffect(() => {
-    const role = localStorage.getItem('role');
-    console.log('Rol del usuario:', role);
-    if (role) {
-      setUserRole(role);
-    }
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
-    // Escuchar cambios en localStorage
-    const handleStorageChange = () => {
-      const updatedRole = localStorage.getItem('role');
-      setUserRole(updatedRole);
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    // Limpieza del efecto
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
+  const handleWishlistClick = () => {
+    navigate('/wishlist');
+  };
 
   return (
     <HeaderContainer>
-      {/* Logo clicable para redirigir a la página de inicio */}
       <Logo src={DonJuanLogo} alt="Don Juan Logo" onClick={() => navigate('/')} />
-
-      {/* Botón visible solo si el rol es 'admin' */}
-      {userRole === 'admin' && (
-        <AdminButton onClick={() => navigate('/upload')}>Subir Producto</AdminButton>
+      {user?.role === 'admin' && (
+        <AdminButton onClick={() => navigate('/upload')}>Subir/Editar Producto</AdminButton>
       )}
-
-      {/* Ícono de usuario para login */}
       <IconColumn>
-        <Icon className="bi bi-person" onClick={() => navigate('/login')} />
+        {/* Show wishlist icon for both admin and client roles */}
+        {(user?.role === 'admin' || user?.role === 'client') && (
+          <Icon className="bi bi-heart" onClick={handleWishlistClick} />
+        )}
+        {user ? (
+          <Icon className="bi bi-box-arrow-right" onClick={handleLogout} />
+        ) : (
+          <Icon className="bi bi-person" onClick={() => navigate('/login')} />
+        )}
       </IconColumn>
     </HeaderContainer>
   );

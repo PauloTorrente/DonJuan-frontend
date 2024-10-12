@@ -1,6 +1,6 @@
 import React from 'react';
-import styled from 'styled-components'; // Asegúrate de que styled-components esté importado
-import whiteLogo from '../../assets/whiteLogo.png'; // Verifica la ruta de la imagen
+import styled from 'styled-components';
+import whiteLogo from '../../assets/whiteLogo.png';
 
 // Define the styled components
 const Overlay = styled.div`

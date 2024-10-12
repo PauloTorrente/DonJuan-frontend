@@ -1,0 +1,118 @@
+/* Products Page Styles */
+.products-page {
+  padding: 1rem; /* Padding around the products page */
+}
+
+/* Container for products */
+.products-container {
+  display: grid; /* Use grid layout for desktop */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid columns */
+  gap: 1.5rem; /* Space between cards */
+}
+
+/* Mobile layout */
+@media (max-width: 600px) {
+  .products-container {
+    display: flex; /* Use flexbox for mobile layout */
+    flex-direction: column; /* Stack cards vertically */
+    gap: 1rem; /* Space between cards */
+  }
+}
+
+/* Filter container styles */
+.filter-container {
+  display: flex; /* Use flexbox for alignment */
+  flex-direction: column; /* Stack filters vertically */
+  margin-bottom: 1.5rem; /* Space below the filter bar */
+}
+
+/* Filter dropdown styles */
+.filter-container select {
+  padding: 0.5rem; /* Padding for dropdowns */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Soft border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #2E2E2E; /* Dark background */
+  color: white; /* White text */
+  margin-bottom: 1rem; /* Space between dropdowns */
+}
+
+/* Price filter styles */
+.price-filter {
+  display: flex; /* Use flexbox for the price filter */
+  align-items: center; /* Center align the items */
+  margin-bottom: 1rem; /* Space below the price filter */
+}
+
+.price-filter label {
+  margin-right: 5px; /* Space between label and input fields */
+}
+
+.price-filter input {
+  width: 70px; /* Fixed width for price inputs */
+  padding: 0.5rem; /* Padding for inputs */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Soft border */
+  border-radius: 4px; /* Rounded corners */
+  background-color: #2E2E2E; /* Dark background */
+  color: white; /* White text */
+  margin: 0 5px; /* Space between inputs */
+}
+
+/* Search and filter container */
+.search-filter-container {
+  display: flex; /* Flex container for search and filter */
+  justify-content: space-between; /* Space between elements */
+  margin-bottom: 1rem; /* Margin below the container */
+}
+
+/* Search input field */
+.search-input {
+  flex-grow: 1; /* Allow input to grow */
+  padding: 0.5rem; /* Inner padding */
+  border: 1px solid #ccc; /* Border color */
+  border-radius: 5px; /* Rounded corners */
+}
+
+/* Loading and error messages */
+.loading-message,
+.error-message {
+  color: #ff0000; /* Red color for error messages */
+  margin-top: 1rem; /* Space above messages */
+}
+
+/* No products found message */
+.no-products-message {
+  margin-top: 1rem; /* Space above the message */
+  color: #888; /* Gray color */
+}
+
+/* Card component styles (if needed) */
+.card {
+  background-color: #fff; /* White background for cards */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  padding: 1rem; /* Inner padding */
+}
+
+/* Container for card images */
+.card img {
+  max-width: 100%; /* Responsive image */
+  border-radius: 4px; /* Rounded corners */
+}
+
+/* Card title styles */
+.card-title {
+  font-size: 1.2rem; /* Title font size */
+  margin-bottom: 0.5rem; /* Space below the title */
+}
+
+/* Card price styles */
+.card-price {
+  font-weight: bold; /* Bold price */
+  color: #1E1E1E; /* Dark color for price */
+}
+
+/* Hover effect for filter button */
+.filter-button:hover {
+  background-color: #F2F2F2; /* Change background on hover */
+  color: #1E1E1E; /* Change text color on hover */
+}

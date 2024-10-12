@@ -1,0 +1,69 @@
+/* Main container of the card */
+.card-container {
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Soft border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 1rem; /* Inner padding */
+    background-color: #1E1E1E; /* Dark background color */
+    color: white; /* Text color */
+    text-align: left; /* Align text to the left */
+    position: relative; /* Positioning for child elements */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; /* Transition effects */
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3); /* Soft shadow for depth */
+}
+
+/* Hover effects for the card */
+.card-container:hover {
+    background-color: rgba(242, 242, 242, 0.1); /* Soft hover effect */
+    transform: translateY(-5px); /* Lift the card on hover */
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.3); /* Deeper shadow on hover */
+}
+
+/* Card content styling */
+.card-content {
+    padding: 15px 1rem; /* Inner padding */
+}
+
+/* Product image styling */
+.product-image {
+    width: 100%; /* Full width of the card */
+    height: 200px; /* Fixed height */
+    object-fit: cover; /* Cover the container */
+    border-radius: 8px; /* Rounded corners for the image */
+}
+
+/* Wishlist button styles */
+.wishlist-button {
+    background-color: white; /* White circular background */
+    border: none; /* No border */
+    position: absolute; /* Absolute positioning */
+    bottom: 15px; /* Position from the bottom */
+    right: 15px; /* Position from the right */
+    cursor: pointer; /* Pointer cursor on hover */
+    display: flex; /* Use flex for centering */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    width: 40px; /* Circle width */
+    height: 40px; /* Circle height */
+    border-radius: 50%; /* Circular shape */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Optional shadow for depth */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+}
+
+/* Change background color on hover */
+.wishlist-button:hover {
+    background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent on hover */
+}
+
+/* Wishlist icon size */
+.wishlist-button img {
+    width: 20px; /* Icon size */
+}
+
+/* In-stock and out-of-stock colors */
+.in-stock {
+    color: #00FF00; /* Green if in stock */
+}
+
+.out-of-stock {
+    color: #FF0000; /* Red if out of stock */
+}

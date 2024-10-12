@@ -1,0 +1,24 @@
+.edit-products-page {
+    padding: 1rem; /* Padding around the edit product page */
+  }
+  
+  .edit-products-container {
+    display: grid; /* Use grid layout for desktop */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid columns */
+    gap: 1.5rem; /* Space between cards */
+  }
+  
+  .edit-card {
+    background-color: #1E1E1E; /* Dark background for edit cards */
+    border-radius: 8px; /* Rounded corners */
+    padding: 1rem; /* Inner padding */
+    color: white; /* Text color */
+    transition: transform 0.2s; /* Transition for hover effects */
+  }
+  
+  .edit-card:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+  }
+  
+  /* Add other necessary styles here, similar to the previous CSS */
+  

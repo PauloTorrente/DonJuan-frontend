@@ -5,7 +5,7 @@ function usePostApi() {
   const [error, setError] = useState(null); // State to store error messages
   const [isLoading, setIsLoading] = useState(false); // State to track loading status
 
-  async function postData({ route, payload }) {
+  async function postData({ route, payload, method = 'POST' }) {
     setIsLoading(true); // Set loading to true when the request starts
     try {
       const token = localStorage.getItem('token'); // Get the token from local storage
@@ -15,12 +15,12 @@ function usePostApi() {
       console.log('Payload being sent:', payload); 
 
       const response = await fetch(`https://donjuan-rzly.onrender.com/${route}`, {
-        method: 'POST', // Specify the POST method
+        method, // Specify the method (POST or DELETE)
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`, // Include the token in the request header
         },
-        body: JSON.stringify(payload), // Stringify the payload to send as body
+        body: method === 'DELETE' ? null : JSON.stringify(payload), // Send payload only for POST requests
       });
 
       // Log the response status
@@ -31,7 +31,6 @@ function usePostApi() {
         const errorResponse = await response.json();
         console.error('Error response:', errorResponse); // Log the error response for debugging
         setError(errorResponse.message || 'Error sending data'); // Set a more specific error message if available
-        setIsLoading(false); // Reset loading state
         return; // Avoid further execution if there is an error
       }
 

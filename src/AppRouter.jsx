@@ -8,6 +8,8 @@ import RegisterPage from './pages/Home/RegisterPage.jsx';
 import Success from './pages/Cart/Success.jsx';
 import ProductsPage from './pages/Products/ProductsPage';
 import UploadProductPage from './pages/UploadProductPage';
+import EditProductPage from './components/EditProductPage';
+import WishlistPage from './pages/Home/WishlistPage';
 
 function AppRouter() {
   return useRoutes(
@@ -25,7 +27,7 @@ function AppRouter() {
         path: '/checkout',
       },
       {
-        element: <ProductDetail/>,
+        element: <ProductDetail />,
         path: '/productDetail/:id',
       },
       { element: <LoginPage />, path: '/login' },
@@ -36,8 +38,10 @@ function AppRouter() {
       },
       { element: <ProductsPage />, path: '/products' },
       { element: <UploadProductPage />, path: '/upload' },
+      { element: <EditProductPage />, path: '/edit-products/:id' }, // Route for editing products
+      { element: <WishlistPage />, path: '/wishlist' },
     ],
-  )
+  );
 }
 
 export default AppRouter;

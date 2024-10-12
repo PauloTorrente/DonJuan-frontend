@@ -11,15 +11,9 @@
   font-family: 'Montserrat', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 300;
-
   background-color: white;
   margin: 0;
   padding: 0;
-  display: flex;
-
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 
 
@@ -29,16 +23,14 @@ body {
   margin: 0;
   padding: 0;
   display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background-color: white;
-  overflow-x: hidden;
 }
 
 div {
-  width: 100%;
+
 }
 
 a {
@@ -62,12 +54,13 @@ a:hover {
   color: var(--secundaryColor);
 }
 
+
 h1 {
   font-size: 2.5em;
+  margin: 0; 
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 12px;
 }
 
 h2 {
@@ -497,6 +490,5 @@ pre {
   color:#CC88FF;
   transform: scale(1.1)
 }
-
 
 

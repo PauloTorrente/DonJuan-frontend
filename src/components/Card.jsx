@@ -1,75 +1,84 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'; 
+import heartIcon from '../assets/heart.png';
+import usePostApi from '../hooks/usePostApi';
+import { useUser } from '../contexts/UserContext'; 
+import './Card.css';
 
-const CardContainer = styled.div`
-  border: none;
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 1rem;
-  width: 240px;
-  background-color: #1E1E1E;
-  color: white;
-  text-align: left;
-  position: relative;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  &:hover {
-    background-color: #EDEDED; /* Color gris claro */
-    transform: translateY(-5px); /* Sutil movimiento hacia arriba */
-  }
-`;
+const Card = ({ product, userWishlist }) => {
+  const { user } = useUser(); // Get user from context
+  const userId = user ? user.userId : null; // Extract userId from user context
+  const [inWishlist, setInWishlist] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-const ImageContainer = styled.div`
-  position: relative;
-  height: 320px;
-  overflow: hidden;
-  margin-bottom: 1rem;
-`;
+  const { postData, error: postDataError, isLoading: postDataLoading } = usePostApi();
 
-const ProductImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
-`;
+  useEffect(() => {
+    console.log('User wishlist in Card:', userWishlist); // Log wishlist for debugging
+    if (userWishlist) {
+      setInWishlist(userWishlist.includes(product._id));
+    }
+  }, [product._id, userWishlist]);
+  
 
-const ProductName = styled.h3`
-  margin: 0.5rem 0;
-  font-size: 1.2rem;
-  font-weight: 600;
-`;
+  const handleWishlistClick = async () => {
+    setLoading(true);
+    setErrorMessage('');
 
-const ProductPrice = styled.p`
-  font-size: 1.1rem;
-  font-weight: bold;
-  margin: 0.3rem 0;
-`;
+    const endpoint = inWishlist ? 'api/wishlist/remove' : 'api/wishlist/add';
+    const method = inWishlist ? 'DELETE' : 'PATCH';
+    const payload = { userId, itemId: product._id };
 
-const BrandName = styled.p`
-  font-size: 0.9rem;
-  color: #AAA; /* Color gris para la marca */
-  margin-bottom: 0.5rem;
-`;
+    if (!userId) {
+      setErrorMessage('User ID is not available. Please log in.');
+      setLoading(false);
+      return;
+    }
 
-const StockMessage = styled.p`
-  color: red;
-  font-weight: bold;
-`;
+    try {
+      const result = await postData({ route: endpoint, payload, method });
+      if (!postDataError) {
+        setInWishlist(!inWishlist); 
+      } else {
+        setErrorMessage('Error updating wishlist. Please try again.');
+      }
+    } catch (error) {
+      setErrorMessage('Error updating wishlist. Please try again.');
+    }
 
-const Card = ({ product }) => {
+    setLoading(false);
+  };
+
   return (
-    <CardContainer>
-      <ImageContainer>
-        <ProductImage src={product.imageUrl} alt={product.name} />
-      </ImageContainer>
-      <ProductName>{product.name}</ProductName>
-      <BrandName>{product.brand}</BrandName> {/* Muestra la marca del producto */}
-      <ProductPrice>€{product.price}</ProductPrice>
-      {product.stock ? (
-        <p>En stock</p>
-      ) : (
-        <StockMessage>¡Sin stock!</StockMessage>
-      )}
-    </CardContainer>
+    <div className="card-container">
+      <div className="image-container">
+        <img src={product.imageUrl} alt={product.name} className="product-image" />
+        {userId && ( // Check if userId is present
+          <button 
+            className={`wishlist-button ${inWishlist ? 'in-wishlist' : ''}`} 
+            onClick={handleWishlistClick} 
+            disabled={loading || postDataLoading}
+          >
+            {loading || postDataLoading ? (
+              <span className="loading-spinner">Loading...</span>
+            ) : (
+              <img src={heartIcon} alt={inWishlist ? "Remove from wishlist" : "Add to wishlist"} />
+            )}
+          </button>
+        )}
+      </div>
+      <div className="card-content">
+        <h3 className="product-name">{product.name}</h3>
+        <p className="product-price">BS {product.price}</p>
+        <p className="product-brand">Marca: {product.brand}</p>
+        <p className="product-sizes">Tallas: {product.sizes.join(', ')}</p>
+        <p className={`stock-status ${product.stock ? 'in-stock' : 'out-of-stock'}`}>
+          {product.stock ? 'En stock' : 'Sin stock'}
+        </p>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+      </div>
+    </div>
   );
 };
 

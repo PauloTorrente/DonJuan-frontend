@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { jwtDecode } from 'jwt-decode';
 import useApi from '../hooks/useApi';
+import { useUser } from '../contexts/UserContext';
 
 const Container = styled.div`
   max-width: 400px;
@@ -72,14 +73,13 @@ const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { getData, error, isLoading, data } = useApi(); // Usar 'data' para obtener respuesta
+  const { getData, error, isLoading, data } = useApi();
+  const { login } = useUser(); // Use the login function from UserContext
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Realizar la llamada a la API con email y password
     getData({
-      route: 'api/auth/login', // Asegúrate de que esta sea la ruta correcta en tu backend
+      route: 'api/auth/login',
       method: 'POST',
       body: { email, password },
     });
@@ -87,20 +87,20 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (data?.token) {
-      // Decodificar el token para extraer el rol
-      const decodedToken = jwtDecode(data.token); // Usa jwt_decode para decodificar el JWT
-      const userRole = decodedToken.role; // Extraer el rol del token decodificado
+      const decodedToken = jwtDecode(data.token);
+      const userRole = decodedToken.role;
+      const userId = decodedToken.userId; // Use the correct key for userId
 
-      // Guardar el token y el rol en localStorage
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('role', userRole); // Guardar el rol en localStorage
+      console.log('Decoded Token:', decodedToken); // Check the token
 
-      console.log('Rol extraído:', userRole); // Verificar si el rol está siendo extraído correctamente
+      // Use the login function to set user context
+      login(userId, userRole, data.token); // Pass the token to the login function
 
-      // Redirigir a la página principal
-      navigate('/');
+      console.log('User ID set in context:', userId); // Log the userId for debugging
+
+      navigate('/'); // Redirect after login
     }
-  }, [data, navigate]);
+  }, [data, login, navigate]);
 
   return (
     <CenteredWrapper>

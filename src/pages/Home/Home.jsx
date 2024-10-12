@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import iconShirts from '../../assets/icon-shirts.png'; // Ruta a la imagen de camisas
-import iconShorts from '../../assets/icon-shorts.png'; // Ruta a la imagen de shorts
-import iconShoes from '../../assets/icon-shoes.png'; // Ruta a la imagen de zapatos
+import iconShirts from '../../assets/icon-shirts.png'; 
+import iconShorts from '../../assets/icon-shorts.png'; 
+import iconShoes from '../../assets/icon-shoes.png'; 
 
 const Container = styled.div`
   display: flex;
