@@ -19,9 +19,9 @@ const fadeIn = keyframes`
 const PageContainer = styled.div`
   animation: ${fadeIn} 0.5s ease-in-out;
   padding: 20px;
-  max-width: 900px; /* Adjust max width for larger screens */
+  max-width: 900px; 
   margin: auto;
-  background-color: #ffffff; /* White background for a clean look */
+  background-color: #ffffff; 
   border-radius: 10px; 
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
 `;
@@ -43,34 +43,34 @@ const WhatsAppButton = styled.img`
 
 const ProductDetailContainer = styled.div`
   display: flex;
-  flex-direction: column; /* Align items vertically for mobile */
-  align-items: center; /* Center items */
-  margin-bottom: 20px; /* Space below the product detail */
+  flex-direction: column; 
+  align-items: center; 
+  margin-bottom: 20px; 
 
   @media (min-width: 768px) {
-    flex-direction: row; /* Align items horizontally for larger screens */
-    align-items: flex-start; /* Align items to the start */
+    flex-direction: row; 
+    align-items: flex-start; 
   }
 `;
 
 const ProductImage = styled.img`
-  max-width: 100%; /* Adjust image width */
+  max-width: 100%; 
   border-radius: 10px; 
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
 `;
 
 const ProductInfo = styled.div`
-  margin: 20px; /* Space around product info */
-  flex: 1; /* Allow product info to grow */
-  text-align: center; /* Center align text */
+  margin: 20px; 
+  flex: 1; 
+  text-align: center; 
 
   @media (min-width: 768px) {
-    text-align: left; /* Left align text for larger screens */
-    margin-left: 20px; /* Space between image and info */
+    text-align: left; 
+    margin-left: 20px; 
   }
 
   h1 {
-    font-size: 2em; /* Larger font size */
+    font-size: 2em; 
     margin-bottom: 10px;
   }
 
@@ -78,12 +78,12 @@ const ProductInfo = styled.div`
     font-size: 1.5em; 
     color: #e63946; 
     font-weight: bold;
-    margin-bottom: 10px; /* Spacing below the price */
+    margin-bottom: 10px; 
   }
 
   p {
     margin: 5px 0; 
-    font-size: 1em; /* Standard font size for description */
+    font-size: 1em; 
   }
 
   .in-stock {
@@ -100,11 +100,11 @@ const ProductInfo = styled.div`
 const ActionButtons = styled.div`
   margin-top: 20px;
   display: flex;
-  justify-content: center; /* Center buttons for mobile */
+  justify-content: center; 
   gap: 15px;
 
   @media (min-width: 768px) {
-    justify-content: flex-start; /* Left align buttons for larger screens */
+    justify-content: flex-start; 
   }
 
   button {
@@ -123,11 +123,11 @@ const ActionButtons = styled.div`
       align-items: center;
 
       img {
-        margin-right: 8px; /* Space between icon and text */
+        margin-right: 8px; 
       }
 
       &.in-wishlist {
-        background-color: #e63946; /* Color when in wishlist */
+        background-color: #e63946; 
       }
     }
 
@@ -139,24 +139,25 @@ const ActionButtons = styled.div`
 
 const ErrorMessage = styled.p`
   color: red;
-  text-align: center; /* Center the error message */
+  text-align: center; 
 `;
 
 const LoadingMessage = styled.p`
   font-style: italic;
-  text-align: center; /* Center the loading message */
+  text-align: center; 
 `;
 
 const ProductDetailPage = () => {
   const { id } = useParams();
   const { data, getData, isLoading, error } = useApi();
-  const { user } = useUser(); // Get user from context
-  const userId = user ? user.userId : null; // Extract userId from user context
-  const { postData, error: postDataError, isLoading: postDataLoading } = usePostApi(); // For wishlist API
+  const { user } = useUser(); 
+  const userId = user ? user.userId : null; 
+  const { postData, error: postDataError, isLoading: postDataLoading } = usePostApi();
   const [product, setProduct] = useState(null);
   const [inWishlist, setInWishlist] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showWhatsAppButton, setShowWhatsAppButton] = useState(false); 
 
   useEffect(() => {
     getData({ route: `api/clothes/${id}` });
@@ -173,6 +174,14 @@ const ProductDetailPage = () => {
       setInWishlist(user.wishlist.includes(product?._id));
     }
   }, [user, product]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowWhatsAppButton(true); 
+    }, 1000);
+
+    return () => clearTimeout(timer); 
+  }, []);
 
   const handleWishlistClick = async () => {
     setLoading(true);
@@ -203,8 +212,9 @@ const ProductDetailPage = () => {
   };
 
   const handleWhatsAppClick = () => {
-    const message = encodeURIComponent(`Estoy interesado en el producto: ${product?.name}`);
-    window.open(`https://wa.link/ysot8m?text=${message}`, '_blank');
+    const currentUrl = window.location.href; // Get the current URL
+    const message = encodeURIComponent(`Estoy interesado en el producto: ${product?.name}. Puedes verlo aquí: ${currentUrl}`);
+    window.open(`https://wa.me/+59178079495?text=${message}`, '_blank');
   };
 
   if (isLoading) return <LoadingMessage>Cargando detalles del producto...</LoadingMessage>;
@@ -226,7 +236,7 @@ const ProductDetailPage = () => {
             {product.stock ? 'En stock' : 'Sin stock'}
           </p>
           <ActionButtons>
-            {userId && ( // Check if userId is present
+            {userId && ( 
               <button 
                 className={`wishlist-button ${inWishlist ? 'in-wishlist' : ''}`} 
                 onClick={handleWishlistClick} 
@@ -245,7 +255,9 @@ const ProductDetailPage = () => {
           </ActionButtons>
         </ProductInfo>
       </ProductDetailContainer>
-      <WhatsAppButton src={WhatsappIcon} alt="WhatsApp" onClick={handleWhatsAppClick} />
+      {showWhatsAppButton && (
+        <WhatsAppButton src={WhatsappIcon} alt="WhatsApp" onClick={handleWhatsAppClick} />
+      )}
     </PageContainer>
   );
 };
