@@ -247,7 +247,6 @@ const ProductDetailPage = () => {
                 ) : (
                   <>
                     <img src={heartIcon}/>
-                    {inWishlist ? 'Eliminar de la lista de deseos' : 'Añadir a la lista de deseos'}
                   </>
                 )}
               </button>
