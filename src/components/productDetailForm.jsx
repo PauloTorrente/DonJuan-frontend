@@ -246,7 +246,7 @@ const ProductDetailPage = () => {
                   <span className="loading-spinner">Cargando...</span>
                 ) : (
                   <>
-                    <img src={heartIcon} alt={inWishlist ? "Eliminar de la lista de deseos" : "Añadir a la lista de deseos"} />
+                    <img src={heartIcon}/>
                     {inWishlist ? 'Eliminar de la lista de deseos' : 'Añadir a la lista de deseos'}
                   </>
                 )}
