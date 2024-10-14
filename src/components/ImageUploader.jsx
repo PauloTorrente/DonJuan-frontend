@@ -3,17 +3,17 @@ import React, { useState } from 'react';
 const ImageUploader = ({ onImageUrlChange }) => {
   const [imageUrl, setImageUrl] = useState('');
 
-  // Función para formatear la URL de Imgur
+
   const formatImgurUrl = (url) => {
-    const regex = /imgur\.com\/([a-zA-Z0-9]+)/; // Extraer el ID de Imgur
+    const regex = /imgur\.com\/([a-zA-Z0-9]+)/; 
     const match = url.match(regex);
 
     if (match) {
-      const imageId = match[1]; // Obtener el ID de la imagen
-      return `https://i.imgur.com/${imageId}.jpg`; // Crear la URL de imagen directa
+      const imageId = match[1]; 
+      return `https://i.imgur.com/${imageId}.jpg`;
     }
 
-    return url; // Si no es de Imgur, devolver la URL tal como está
+    return url;
   };
 
   const handleChange = (e) => {
@@ -23,7 +23,7 @@ const ImageUploader = ({ onImageUrlChange }) => {
     const formattedUrl = formatImgurUrl(url);
     console.log("Formatted Imgur URL:", formattedUrl);
 
-    onImageUrlChange(formattedUrl); // Pasar la URL formateada al padre
+    onImageUrlChange(formattedUrl); 
   };
 
   return (

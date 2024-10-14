@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #eef2f3; /* Background color for the whole page */
+}
+
+h1 {
+    font-weight: bold;
+    color: #2a9d8f; /* Color for the product name */
+}
+
+.ProductDetailContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0; /* Margin around the container */
+
+    @media (min-width: 768px) {
+        flex-direction: row;
+    }
+}
+
+.ProductImage {
+    max-width: 300px; /* Limit image size */
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.ProductInfo {
+    margin: 20px;
+    text-align: center;
+
+    @media (min-width: 768px) {
+        text-align: left; /* Align left for larger screens */
+        font-size: 1.3em; /* Increase text size for PC */
+    }
+}
+
+h1 {
+    font-size: 2.5em; /* Larger font size for product name */
+}
+
+.price {
+    font-size: 2em; /* Increase price font size */
+    color: #e63946; /* Price color */
+}
+
+.in-stock {
+    color: green; /* Color for in stock */
+    font-size: 1.2em; /* Slightly larger font size */
+}
+
+.out-of-stock {
+    color: red; /* Color for out of stock */
+    font-size: 1.2em; /* Slightly larger font size */
+}
+
+.ActionButtons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+
+    button {
+        padding: 12px 24px; /* Button padding */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin: 0 10px; /* Space between buttons */
+        font-size: 1.1em; /* Button text size */
+    }
+}
+
+.WhatsAppButton {
+    position: fixed;
+    bottom: -60px; /* Start off-screen */
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    transition: transform 0.3s, bottom 0.3s; /* Smooth transition */
+    animation: slideIn 0.5s forwards; /* Animation for sliding in */
+    animation-delay: 1s; /* Delay before appearing */
+}
+
+@keyframes slideIn {
+    from {
+        bottom: -60px; /* Start from below */
+    }
+    to {
+        bottom: 20px; /* Final position */
+    }
+}
+
+.WhatsAppButton:hover {
+    transform: scale(1.1); /* Scale effect on hover */
+}

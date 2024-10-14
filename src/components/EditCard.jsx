@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import useApi from '../hooks/useApi'; // Import your custom hook
+import useApi from '../hooks/useApi';
 import './EditCard.css';
 
 const EditCard = ({ product, onStockChange }) => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const { getData } = useApi(); // Use your custom hook
+  const { getData } = useApi(); 
 
   const handleStockChange = async () => {
     setLoading(true);
     setErrorMessage('');
 
     try {
-      // Call your API endpoint to update the stock
       await getData({
         route: `api/clothes/${product._id}`,
         method: 'PATCH',

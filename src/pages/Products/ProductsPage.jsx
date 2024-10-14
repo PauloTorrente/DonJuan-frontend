@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import useApi from '../../hooks/useApi';
 import Card from '../../components/Card';
 import SearchBar from '../../components/SearchBar';
@@ -11,10 +12,17 @@ const ProductsPage = () => {
   const [selectedBrand, setSelectedBrand] = useState('');
   const [priceRange, setPriceRange] = useState([0, 100]);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
   // Get user role and id
   const userRole = localStorage.getItem('role');
   const userId = localStorage.getItem('userId');
   const userWishlist = JSON.parse(localStorage.getItem('wishList')) || [];
+
+  // Extract piece query parameter from URL
+  const queryParams = new URLSearchParams(location.search);
+  const piece = queryParams.get('piece');
 
   useEffect(() => {
     getData({ route: 'api/clothes' });
@@ -25,12 +33,17 @@ const ProductsPage = () => {
     const matchesSize = selectedSize ? product.sizes.includes(selectedSize) : true;
     const matchesBrand = selectedBrand ? product.brand.toLowerCase() === selectedBrand.toLowerCase() : true;
     const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
+    const matchesPiece = piece ? product.piece.toLowerCase() === piece.toLowerCase() : true; // Add this line
 
-    return matchesSearchTerm && matchesSize && matchesBrand && matchesPrice;
+    return matchesSearchTerm && matchesSize && matchesBrand && matchesPrice && matchesPiece; // Include matchesPiece
   });
 
   const uniqueSizes = [...new Set(data?.flatMap(product => product.sizes))];
   const uniqueBrands = [...new Set(data?.map(product => product.brand))];
+
+  const handleCardClick = (productId) => {
+    navigate(`/productDetail/${productId}`);
+  };
 
   return (
     <div className="products-page">
@@ -73,13 +86,14 @@ const ProductsPage = () => {
       <div className="products-container">
         {filteredProducts && filteredProducts.length > 0 ? (
           filteredProducts.map(product => (
-            <Card
-              key={product._id}
-              product={product}
-              userRole={userRole}
-              userId={userId}
-              userWishlist={userWishlist}
-            />
+            <div key={product._id} onClick={() => handleCardClick(product._id)}>
+              <Card
+                product={product}
+                userRole={userRole}
+                userId={userId}
+                userWishlist={userWishlist}
+              />
+            </div>
           ))
         ) : (
           <p>No products found.</p>
