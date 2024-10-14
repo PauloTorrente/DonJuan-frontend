@@ -116,7 +116,7 @@ const ActionButtons = styled.div`
     transition: background-color 0.3s;
 
     &.wishlist-button {
-      background-color: #264653; 
+      background-color: #FFFFFF; 
       color: white; 
       position: relative;
       display: flex;
