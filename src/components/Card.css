@@ -67,3 +67,35 @@
 .out-of-stock {
     color: #FF0000; /* Red if out of stock */
 }
+
+/* Price container for original and discounted price */
+.price-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+/* Original price with strikethrough */
+.original-price {
+    text-decoration: line-through;
+    color: #999; /* Light gray for the original price */
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+/* Discounted price with emphasis */
+.discounted-price {
+    color: #e74c3c; /* Red for discounted price */
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Badge for discount percentage */
+.discount-badge {
+    background-color: #e74c3c; /* Red badge */
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-left: 10px;
+}

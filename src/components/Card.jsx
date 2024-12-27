@@ -11,6 +11,7 @@ const Card = ({ product, userWishlist }) => {
   const [inWishlist, setInWishlist] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [discountedPrice, setDiscountedPrice] = useState(null); // Novo estado para o preço com desconto
 
   const { postData, error: postDataError, isLoading: postDataLoading } = usePostApi();
 
@@ -19,8 +20,16 @@ const Card = ({ product, userWishlist }) => {
     if (userWishlist) {
       setInWishlist(userWishlist.includes(product._id));
     }
-  }, [product._id, userWishlist]);
-  
+
+    // Calculando o preço com desconto, se disponível
+    if (product.discount > 0) {
+      const discountAmount = (product.price * product.discount) / 100;
+      const newPrice = product.price - discountAmount;
+      setDiscountedPrice(newPrice);
+    } else {
+      setDiscountedPrice(null);
+    }
+  }, [product._id, userWishlist, product.price, product.discount]);
 
   const handleWishlistClick = async () => {
     setLoading(true);
@@ -70,7 +79,20 @@ const Card = ({ product, userWishlist }) => {
       </div>
       <div className="card-content">
         <h3 className="product-name">{product.name}</h3>
-        <p className="product-price">BS {product.price}</p>
+
+        {/* Exibindo preço original e preço com desconto */}
+        <div className="price-container">
+          {discountedPrice ? (
+            <>
+              <p className="product-price original-price">BS {product.price}</p>
+              <p className="product-price discounted-price">BS {discountedPrice.toFixed(2)}</p>
+              <span className="discount-badge">-{product.discount}%</span>
+            </>
+          ) : (
+            <p className="product-price">BS {product.price}</p>
+          )}
+        </div>
+
         <p className="product-brand">Marca: {product.brand}</p>
         <p className="product-sizes">Tallas: {product.sizes.join(', ')}</p>
         <p className={`stock-status ${product.stock ? 'in-stock' : 'out-of-stock'}`}>

@@ -1,10 +1,8 @@
-// src/pages/ProductDetail/ProductDetail.jsx
-import ProductDetailForm from '../../components/productDetailForm'; // Rename the import to avoid conflict
-
+import ProductDetailForm from '../../components/productDetailForm'; 
 const ProductDetail = () => {
   return (
     <div>
-      <ProductDetailForm /> {/* Use the renamed import here */}
+      <ProductDetailForm />
     </div>
   );
 };

@@ -58,6 +58,7 @@ const UploadProductForm = () => {
   const [brand, setBrand] = useState('');
   const [sizes, setSizes] = useState('');
   const [imageUrl, setImageUrl] = useState(null);
+  const [discount, setDiscount] = useState(''); // Novo estado para o desconto
   const { postData, isLoading, error } = usePostApi();
   const navigate = useNavigate(); 
 
@@ -80,7 +81,8 @@ const UploadProductForm = () => {
       piece,
       brand,
       sizes: sizes.split(',').map(size => size.trim()),
-      imageUrl, 
+      imageUrl,
+      discount: discount ? Number(discount) : 0, // Adicionando o desconto
     };
 
     try {
@@ -116,6 +118,13 @@ const UploadProductForm = () => {
         
         <Input type="text" placeholder="Brand" onChange={(e) => setBrand(e.target.value)} required />
         <Input type="text" placeholder="Sizes (comma-separated)" onChange={(e) => setSizes(e.target.value)} required />
+        
+        <Input 
+          type="number" 
+          placeholder="Discount (%)" 
+          value={discount} 
+          onChange={(e) => setDiscount(e.target.value)} 
+        />
         
         <ImageUploader onImageUrlChange={setImageUrl} />
         
