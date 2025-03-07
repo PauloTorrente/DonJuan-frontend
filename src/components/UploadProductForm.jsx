@@ -59,7 +59,7 @@ const UploadProductForm = () => {
   const [sizes, setSizes] = useState('');
   const [imageUrl, setImageUrl] = useState(null);
   const [discount, setDiscount] = useState(''); // Novo estado para o desconto
-  const { postData, isLoading, error } = usePostApi();
+  const { postData, isLoading, error } = usePostApi(); // pq n está funcionando?
   const navigate = useNavigate(); 
 
   // Check if user is admin
